@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}{{ r.title }}{% endblock %}
+{% block content %}<div class="panel"><h1>{{ r.title }} <small class="muted">v{{ r.version }}</small></h1><p class="muted">Période du {{ r.period_start|date:"d/m/Y" }} au {{ r.period_end|date:"d/m/Y" }} · publié le {{ r.published_at|date:"d/m/Y" }}. Chiffres issus des opérations validées.</p>
+<div class="row g-2 mb-3"><div class="col-6 col-md-3"><div class="stat">Solde initial<b>{{ s.opening }}</b></div></div><div class="col-6 col-md-3"><div class="stat">Recettes<b>{{ s.income }}</b></div></div><div class="col-6 col-md-3"><div class="stat">Dépenses<b>{{ s.expense }}</b></div></div><div class="col-6 col-md-3"><div class="stat">Solde final<b>{{ s.closing }}</b></div></div></div>
+<div class="row"><div class="col-md-6"><h2>Recettes par catégorie</h2>{% for k, v, w in inc %}<div>{{ k }} - {{ v }} Ar<div class="bar" style="width:{{ w }}%"></div></div>{% endfor %}</div>
+<div class="col-md-6"><h2>Dépenses par catégorie</h2>{% for k, v, w in exp %}<div>{{ k }} - {{ v }} Ar<div class="bar red" style="width:{{ w }}%"></div></div>{% endfor %}</div></div>
+<a class="btn btn-aesm mt-3" href="{% url 'finance_member:report_pdf' r.pk %}">PDF</a> <a class="btn btn-outline-secondary mt-3" href="{% url 'finance_member:report_xlsx' r.pk %}">Excel</a></div>{% endblock %}

@@ -1,0 +1,7 @@
+{% if messages %}<div class="toast-stack" aria-live="polite" aria-atomic="true">{% for m in messages %}
+ <div class="toast-x t-{{ m.tags|default:'info' }}" role="status">
+  <span class="t-ico"><svg class="i"><use href="#i-{% if 'success' in m.tags %}check{% elif 'error' in m.tags or 'warning' in m.tags %}alert{% else %}info{% endif %}"/></svg></span>
+  <div class="t-msg">{{ m }}</div>
+  <button type="button" class="t-close" aria-label="Fermer"><svg class="i"><use href="#i-x"/></svg></button>
+  <span class="t-bar"></span>
+ </div>{% endfor %}</div>{% endif %}

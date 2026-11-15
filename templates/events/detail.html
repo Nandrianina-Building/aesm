@@ -1,0 +1,34 @@
+{% extends "base.html" %}{% load static ui %}{% block title %}{{ event.title }}{% endblock %}{% block meta_description %}{{ event.description|striptags|truncatechars:155 }}{% endblock %}{% block og_image_tag %}{% if event.cover_url %}<meta property="og:image" content="{{ SITE_URL }}{{ event.cover_url }}">{% endif %}{% endblock %}
+{% block content %}
+<a class="back-link" href="{% url 'events:list' %}"><svg class="i" style="transform:scaleX(-1)"><use href="#i-chev"/></svg>Tous les événements</a>
+<article class="igpost ig-detail">
+ {% include "partials/ig_media.html" with uid="e" imgs=event.all_images alt=event.title ratio="sq" %}
+ <div class="ig-side-col">
+  <header class="ig-head">
+   <span class="ig-av"><span><img src="{% static 'img/logo.png' %}" alt=""></span></span>
+   <div class="ig-who"><b>{{ SITE_NAME }}</b><small><svg class="i"><use href="#i-pin"/></svg> {{ event.location }}</small></div>
+   <div class="ig-tags"><span class="badge-s">{{ event.get_status_display }}</span></div>
+  </header>
+  <div class="ig-scroll">
+   <h1 class="ig-h1">{{ event.title }}</h1>
+   <ul class="ev-facts">
+    <li><span class="fi"><svg class="i"><use href="#i-calendar"/></svg></span><div><b>{{ event.starts_at|date:"l d F Y" }}</b><small>à {{ event.starts_at|date:"H:i" }}</small></div></li>
+    <li><span class="fi"><svg class="i"><use href="#i-pin"/></svg></span><div><b>{{ event.location }}</b><small>Lieu</small></div></li>
+    <li><span class="fi"><svg class="i"><use href="#i-wallet"/></svg></span><div><b>{% if event.is_free %}Gratuit{% else %}{{ event.price }} Ar{% endif %}</b><small>Prix</small></div></li>
+    <li><span class="fi"><svg class="i"><use href="#i-users"/></svg></span><div><b>{{ seats_left }} / {{ event.capacity }}</b><small>Places restantes</small></div></li>
+    <li><span class="fi"><svg class="i"><use href="#i-clock"/></svg></span><div><b>{{ event.registration_deadline|date:"d/m/Y H:i" }}</b><small>Inscriptions jusqu'au</small></div></li>
+   </ul>
+   <div class="ig-text">{{ event.description|linebreaks }}</div>
+   {% if event.conditions %}<p class="small"><b>Conditions :</b> {{ event.conditions }}</p>{% endif %}
+   {% if event.members_only %}<p class="small muted"><svg class="i"><use href="#i-lock"/></svg> Membres actifs uniquement</p>{% endif %}
+  </div>
+  <div class="ig-foot">
+   <div class="ig-actions"><button type="button" class="ig-btn" data-share data-title="{{ event.title }}" data-url="{{ request.path }}" aria-label="Partager"><svg class="i"><use href="#i-share"/></svg></button></div>
+   {% if my_res %}<div class="alert alert-success mb-0">Vous avez une réservation ({{ my_res.get_status_display }}). <a href="{% url 'events_member:list' %}">Voir mes réservations</a></div>
+   {% elif not user.is_authenticated %}<a class="btn btn-aesm w-100" href="{% url 'accounts:login' %}?next={{ request.path }}">Se connecter pour réserver</a>
+   {% elif event.registration_open and seats_left > 0 and not event.invitation_only %}<form method="post" action="{% url 'events:reserve' event.pk %}">{% csrf_token %}<button class="btn btn-aesm w-100">Réserver ma place</button></form>
+   {% else %}<div class="alert alert-secondary mb-0">Les réservations ne sont pas disponibles{% if seats_left == 0 %} (complet){% endif %}.</div>{% endif %}
+  </div>
+ </div>
+</article>
+{% endblock %}

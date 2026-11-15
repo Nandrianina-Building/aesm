@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Vérification{% endblock %}
+{% block content %}<div class="panel {% if found and status == 'valid' %}verify-ok{% else %}verify-bad{% endif %}" style="max-width:640px"><h1>Vérification d'authenticité</h1>
+{% if found %}<dl class="row"><dt class="col-sm-4">Document</dt><dd class="col-sm-8">{{ kind }}</dd><dt class="col-sm-4">Numéro</dt><dd class="col-sm-8">{{ number }}</dd>
+<dt class="col-sm-4">Statut</dt><dd class="col-sm-8"><strong>{{ status_label }}</strong></dd><dt class="col-sm-4">Délivré le</dt><dd class="col-sm-8">{{ issued|date:"d/m/Y" }}</dd>
+<dt class="col-sm-4">Titulaire</dt><dd class="col-sm-8">{{ holder }}</dd>{% if detail %}<dt class="col-sm-4">Objet</dt><dd class="col-sm-8">{{ detail }}</dd>{% endif %}</dl>
+{% if ticket and can_scan and status == 'valid' %}<form method="post" action="{% url 'gestion:scan_ticket' ticket.token %}">{% csrf_token %}<button class="btn btn-aesm">Enregistrer la présence</button></form>{% endif %}
+{% else %}<p>Aucun document ne correspond à ce code. Il peut être falsifié : ne l'acceptez pas.</p>{% endif %}</div>{% endblock %}

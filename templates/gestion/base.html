@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Gestion{% endblock %}
+{% block content %}
+<div class="row g-3">
+ <div class="col-md-4 col-lg-3 col-xl-2">
+ <button class="btn btn-aesm w-100 d-md-none mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#gside" aria-controls="gside"><svg class="i"><use href="#i-grid"/></svg> Menu de gestion</button>
+ <aside class="side collapse d-md-block" id="gside">
+  <a href="{% url 'gestion:home' %}"><strong>Tableau de bord</strong></a>
+  {% if perm.members.view or perm.memberships.manage %}<div class="grp">Membres</div>
+   {% if perm.members.view %}<a href="{% url 'gestion:users' %}">Utilisateurs</a>{% endif %}
+   <a href="{% url 'gestion:memberships' %}">Adhésions</a>{% if perm.members.view %}<a href="{% url 'gestion:cards' %}">Cartes</a>{% endif %}{% endif %}
+  {% if perm.contributions.view or perm.payments.view %}<div class="grp">Cotisations</div>
+   <a href="{% url 'gestion:contributions' %}">Types de cotisation</a><a href="{% url 'gestion:dues' %}">Par membre</a><a href="{% url 'gestion:payments' %}">Paiements</a><a href="{% url 'gestion:quitus' %}">Quitus</a>{% endif %}
+  {% if perm.finance.view or perm.finance.manage %}<div class="grp">Finances</div><a href="{% url 'gestion:finance' %}">Synthèse</a><a href="{% url 'gestion:entries' %}">Opérations</a><a href="{% url 'gestion:reports' %}">Rapports</a>{% endif %}
+  {% if perm.events.manage or perm.tickets.scan or perm.reservations.manage %}<div class="grp">Événements</div><a href="{% url 'gestion:events' %}">Événements</a>{% if perm.tickets.scan %}<a href="{% url 'gestion:scan' %}">Valider un billet</a>{% endif %}{% endif %}
+  {% if perm.publications.manage or perm.documents.manage %}<div class="grp">Contenus</div><a href="{% url 'gestion:publications' %}">Publications</a><a href="{% url 'gestion:categories' %}">Catégories</a>{% if perm.comments.moderate %}<a href="{% url 'gestion:comments' %}">Commentaires</a>{% endif %}{% if perm.documents.manage %}<a href="{% url 'gestion:documents' %}">Documents</a>{% endif %}{% if perm.officers.manage %}<a href="{% url 'gestion:officers' %}">Bureau</a>{% endif %}{% endif %}
+  {% if perm.support.manage or perm.notifications.send %}<div class="grp">Relation membres</div>{% if perm.support.manage %}<a href="{% url 'gestion:support' %}">Réclamations</a>{% endif %}{% if perm.contact.manage %}<a href="{% url 'gestion:contacts' %}">Messages de contact</a>{% endif %}{% if perm.notifications.send %}<a href="{% url 'gestion:broadcast' %}">Envoyer une annonce</a>{% endif %}{% endif %}
+  {% if perm.audit.view or perm.settings.manage %}<div class="grp">Administration</div>{% if perm.audit.view %}<a href="{% url 'gestion:audit' %}">Journal d'audit</a>{% endif %}{% if perm.settings.manage %}<a href="{% url 'gestion:settings' %}">Paramètres</a>{% endif %}{% endif %}
+ </aside>
+ </div>
+ <section class="col-md-8 col-lg-9 col-xl-10">{% block gcontent %}{% endblock %}</section>
+</div>
+{% endblock %}

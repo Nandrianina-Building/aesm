@@ -1,0 +1,16 @@
+{% comment %}Menu horizontal de l'espace membre : onglets à icônes, défilement doux, indicateurs de débordement.{% endcomment %}
+<nav class="space-menu" aria-label="Menu de mon espace"><div class="container"><div class="sm-wrap">
+ <div class="sm-scroll" role="tablist">
+ <a href="{% url 'dashboard:home' %}" data-nav="exact"><span class="sm-ico"><svg class="i"><use href="#i-grid"/></svg></span><span class="sm-lbl">Vue d'ensemble</span></a>
+ <a href="{% url 'memberships:apply' %}" data-nav><span class="sm-ico"><svg class="i"><use href="#i-usercheck"/></svg></span><span class="sm-lbl">Adhésion</span></a>
+ <a href="{% url 'payments:dues' %}" data-nav><span class="sm-ico"><svg class="i"><use href="#i-wallet"/></svg></span><span class="sm-lbl">Cotisations</span></a>
+ <a href="{% url 'payments:list' %}" data-nav><span class="sm-ico"><svg class="i"><use href="#i-card"/></svg></span><span class="sm-lbl">Paiements</span></a>
+ <a href="{% url 'certificates:receipt_list' %}" data-nav><span class="sm-ico"><svg class="i"><use href="#i-receipt"/></svg></span><span class="sm-lbl">Reçus</span></a>
+ <a href="{% url 'certificates:quitus_list' %}" data-nav><span class="sm-ico"><svg class="i"><use href="#i-shield"/></svg></span><span class="sm-lbl">Quitus</span></a>
+ <a href="{% url 'certificates:card' %}" data-nav><span class="sm-ico"><svg class="i"><use href="#i-idcard"/></svg></span><span class="sm-lbl">Ma carte</span></a>
+ <a href="{% url 'events_member:list' %}" data-nav><span class="sm-ico"><svg class="i"><use href="#i-ticket"/></svg></span><span class="sm-lbl">Réservations</span></a>
+ <a href="{% url 'finance_member:list' %}" data-nav><span class="sm-ico"><svg class="i"><use href="#i-chart"/></svg></span><span class="sm-lbl">Finances</span></a>
+ <a href="{% url 'support:list' %}" data-nav><span class="sm-ico"><svg class="i"><use href="#i-lifebuoy"/></svg></span><span class="sm-lbl">Réclamations</span></a>
+ <a href="{% url 'accounts:profile' %}" data-nav><span class="sm-ico"><svg class="i"><use href="#i-user"/></svg></span><span class="sm-lbl">Profil</span></a>
+ </div>
+</div></div></nav>

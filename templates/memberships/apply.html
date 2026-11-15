@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Adhésion{% endblock %}
+{% block content %}<div class="row g-3"><div class="col-lg-7"><div class="panel"><h1>Mon adhésion</h1>
+<p>Le <strong>statut du compte</strong>, la <strong>demande d'adhésion</strong> et la <strong>situation financière</strong> sont suivis séparément.
+Compte : <span class="badge-s">{{ user.get_account_status_display }}</span></p>
+{% if can_apply %}<h2>Soumettre une demande d'adhésion</h2><form method="post">{% csrf_token %}{% include "partials/form.html" %}<button class="btn btn-aesm">Soumettre ma demande</button></form>
+{% else %}<p class="muted">Aucune nouvelle demande n'est possible actuellement.</p>{% endif %}</div></div>
+<div class="col-lg-5"><div class="panel"><h2>Historique</h2>{% for m in memberships %}<div class="item"><strong>{{ m.year }}</strong> <span class="badge-s">{{ m.get_status_display }}</span>
+{% if m.starts_on %}<br><small>Du {{ m.starts_on|date:"d/m/Y" }} au {{ m.ends_on|date:"d/m/Y" }}</small>{% endif %}
+{% if m.refusal_reason %}<br><small class="text-danger">Motif de refus : {{ m.refusal_reason }}</small>{% endif %}
+{% if m.missing_documents %}<br><small>Pièces manquantes / remarques : {{ m.missing_documents }}</small>{% endif %}</div>{% empty %}<p class="muted">Aucune demande.</p>{% endfor %}</div></div></div>{% endblock %}

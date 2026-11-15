@@ -1,0 +1,4 @@
+{% extends "gestion/base.html" %}{% block title %}Valider un billet - Gestion{% endblock %}{% block gcontent %}<div class="panel" style="max-width:600px"><h1>Valider un billet</h1>
+<p class="muted">Scannez le QR code du billet avec un lecteur puis collez le lien ou le code ici, ou ouvrez directement le lien scanné.</p>
+{% if result %}<span data-toast="{% if result.ok %}success{% else %}error{% endif %}" hidden>{{ result.message }}</span><div class="alert alert-{% if result.ok %}success{% else %}danger{% endif %}">{{ result.message }}</div>{% endif %}
+<form method="post">{% csrf_token %}<div class="form-block"><p><label for="t">Code ou lien du billet</label><input id="t" name="token" required autofocus></p></div><button class="btn btn-aesm">Valider</button></form></div>{% endblock %}

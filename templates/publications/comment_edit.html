@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block title %}Modifier mon commentaire{% endblock %}{% block content %}<div class="panel"><h1>Modifier mon commentaire</h1><form method="post">{% csrf_token %}{% include "partials/form.html" %}<button class="btn btn-aesm">Enregistrer</button> <a href="{% url 'publications:detail' pub.slug %}">Annuler</a></form></div>{% endblock %}

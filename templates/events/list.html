@@ -1,0 +1,30 @@
+{% extends "base.html" %}{% load static ui %}{% block title %}Événements{% endblock %}{% block meta_description %}Événements à venir de l'AESM : conférences, ateliers, sorties de terrain. Réservez votre place en ligne.{% endblock %}
+{% block content %}
+<div class="sec-title"><h1 class="mb-0">Événements</h1><span class="muted small">{{ upcoming|length }} à venir</span></div>
+<div class="ig-grid">
+{% for e in upcoming %}
+ <article class="igpost">
+  <header class="ig-head">
+   <a class="ig-av" href="{% url 'events:detail' e.pk %}" tabindex="-1" aria-hidden="true"><span><img src="{% static 'img/logo.png' %}" alt=""></span></a>
+   <div class="ig-who"><b>{{ SITE_NAME }}</b><small><svg class="i"><use href="#i-pin"/></svg> {{ e.location }}</small></div>
+   <div class="ig-tags"><span class="badge-s">{% if e.is_free %}Gratuit{% else %}{{ e.price }} Ar{% endif %}</span></div>
+  </header>
+  <a class="ig-media-link" href="{% url 'events:detail' e.pk %}">{% with imgs=e.all_images %}{% include "partials/ig_media.html" with uid=e.pk imgs=imgs alt=e.title ratio="sq" %}{% endwith %}
+   <span class="date-chip"><b>{{ e.starts_at|date:"d" }}</b><small>{{ e.starts_at|date:"M" }}</small></span></a>
+  <div class="ig-actions">
+   <a class="ig-btn" href="{% url 'events:detail' e.pk %}" aria-label="Réserver"><svg class="i"><use href="#i-ticket"/></svg></a>
+   <a class="ig-btn" href="{% url 'events:detail' e.pk %}" aria-label="Détails"><svg class="i"><use href="#i-calendar"/></svg></a>
+   <button type="button" class="ig-btn" data-share data-title="{{ e.title }}" data-url="{% url 'events:detail' e.pk %}" aria-label="Partager"><svg class="i"><use href="#i-share"/></svg></button>
+  </div>
+  <div class="ig-body">
+   <p class="ig-cap"><b>{{ e.title }}</b></p>
+   <p class="ig-meta-line"><svg class="i"><use href="#i-clock"/></svg>{{ e.starts_at|date:"l d F Y · H:i" }}</p>
+   <p class="ig-cap muted">{{ e.description|truncatechars:110 }}</p>
+   <div class="d-flex align-items-center gap-2 flex-wrap mt-2"><span class="badge-s">{{ e.get_status_display }}</span><a class="btn btn-aesm btn-sm ms-auto" href="{% url 'events:detail' e.pk %}">{% if e.registration_open %}Réserver{% else %}Voir{% endif %}</a></div>
+  </div>
+ </article>
+{% empty %}<div class="empty"><svg class="i"><use href="#i-calendar"/></svg><p>Aucun événement à venir.</p></div>{% endfor %}
+</div>
+{% if past %}<div class="sec-title mt-4"><h2 class="mb-0">Événements passés</h2></div>
+<div class="ig-tiles">{% for e in past %}<a class="tile" href="{% url 'events:detail' e.pk %}">{% if e.cover_url %}<img src="{{ e.cover_url }}" alt="{{ e.title }}" loading="lazy" decoding="async">{% else %}<span class="ph"><svg class="i"><use href="#i-calendar"/></svg></span>{% endif %}<span class="tile-ov"><b>{{ e.title }}</b><small>{{ e.starts_at|date:"d/m/Y" }}</small></span></a>{% endfor %}</div>{% endif %}
+{% endblock %}

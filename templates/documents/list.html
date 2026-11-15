@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}Documents{% endblock %}{% block meta_description %}Bibliothèque documentaire de l'AESM : cours, supports et documents officiels à télécharger.{% endblock %}
+{% block content %}<div class="sec-title"><h1 class="mb-0">Bibliothèque documentaire</h1></div>
+<form class="filters mb-3" method="get"><div class="f-search"><svg class="i"><use href="#i-search"/></svg><input class="form-control" name="q" value="{{ q }}" placeholder="Rechercher un document" aria-label="Rechercher"></div>
+<select class="form-select" name="niveau" aria-label="Niveau"><option value="">Niveau</option>{% for v, l in levels %}<option value="{{ v }}" {% if v == level %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+<select class="form-select" name="type" aria-label="Type"><option value="">Type</option>{% for v, l in types %}<option value="{{ v }}" {% if v == dtype %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+<select class="form-select" name="categorie" aria-label="Catégorie"><option value="">Catégorie</option>{% for c in categories %}<option value="{{ c.pk }}" {% if c.pk|stringformat:"s" == cat %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select>
+<button class="btn btn-aesm">Filtrer</button></form>
+<div class="doc-grid">{% for d in page %}<article class="doc-card"><span class="doc-ico"><svg class="i"><use href="#i-file"/></svg></span>
+<div class="doc-main"><h2>{{ d.title }}</h2><div class="mb-1"><span class="badge-s">{{ d.get_level_display }}</span> <span class="badge-s">{{ d.get_doc_type_display }}</span>{% if d.visibility == 'members' %} <span class="badge-s">Membres</span>{% endif %}</div><p class="muted small mb-0">{{ d.description|truncatechars:140 }}</p></div>
+<a class="btn btn-aesm btn-sm doc-dl" href="{% url 'documents:download' d.pk %}"><svg class="i"><use href="#i-download"/></svg>Télécharger</a></article>
+{% empty %}<div class="empty"><svg class="i"><use href="#i-file"/></svg><p>Aucun document trouvé.</p></div>{% endfor %}</div>{% include "partials/pagination.html" %}{% endblock %}

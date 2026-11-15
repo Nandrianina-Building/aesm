@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block title %}Mes quitus{% endblock %}
+{% block content %}<div class="panel"><h1>Mes quitus</h1>{% for q in quitus %}<div class="item d-flex justify-content-between"><span>{{ q.number }} - {{ q.contribution_name }} {{ q.period_label }} - {{ q.amount }} Ar <span class="badge-s">{{ q.status_label }}</span></span><a href="{% url 'certificates:quitus_pdf' q.number %}">PDF</a></div>{% empty %}<p class="muted">Aucun quitus. Un quitus est délivré après confirmation du paiement d'une cotisation.</p>{% endfor %}</div>{% endblock %}

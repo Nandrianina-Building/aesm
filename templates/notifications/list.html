@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Notifications{% endblock %}
+{% block content %}<div class="panel"><div class="d-flex justify-content-between"><h1>Notifications</h1><form method="post" action="{% url 'notifications:mark_all' %}">{% csrf_token %}<button class="btn btn-sm btn-outline-secondary">Tout marquer comme lu</button></form></div>
+{% for n in page %}<div class="item {% if not n.is_read %}fw-bold{% endif %}"><a href="{% url 'notifications:open' n.pk %}">{{ n.title }}</a><div class="fw-normal muted">{{ n.message }} <small>{{ n.created_at|date:"d/m/Y H:i" }}</small></div>
+<div class="d-flex gap-2 fw-normal"><form method="post" action="{% url 'notifications:toggle' n.pk %}">{% csrf_token %}<button class="btn btn-link p-0">{% if n.is_read %}Marquer non lue{% else %}Marquer lue{% endif %}</button></form><form method="post" action="{% url 'notifications:delete' n.pk %}">{% csrf_token %}<button class="btn btn-link p-0 text-danger">Supprimer</button></form></div></div>
+{% empty %}<p class="muted">Aucune notification.</p>{% endfor %}{% include "partials/pagination.html" %}</div>{% endblock %}

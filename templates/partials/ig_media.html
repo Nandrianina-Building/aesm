@@ -1,0 +1,13 @@
+{% comment %}Emplacement média façon Instagram. Variables : uid, imgs (liste d'URL), alt, ratio (sq|portrait|wide), badge (HTML optionnel){% endcomment %}
+<div class="ig-media ig-{{ ratio|default:'portrait' }}">
+{% if imgs|length == 0 %}<div class="ph"><svg class="i"><use href="#i-image"/></svg></div>
+{% elif imgs|length == 1 %}<img src="{{ imgs.0 }}" alt="{{ alt }}" loading="lazy" decoding="async">
+{% else %}
+<div id="c-{{ uid }}" class="carousel slide ig-car" data-bs-ride="false" data-bs-touch="true">
+ <div class="carousel-inner">{% for u in imgs %}<div class="carousel-item {% if forloop.first %}active{% endif %}"><img src="{{ u }}" alt="{{ alt }} ({{ forloop.counter }}/{{ imgs|length }})"{% if not forloop.first %} loading="lazy"{% endif %} decoding="async"></div>{% endfor %}</div>
+ <button class="carousel-control-prev" type="button" data-bs-target="#c-{{ uid }}" data-bs-slide="prev" aria-label="Précédente"><span class="ig-arrow"><svg class="i"><use href="#i-chev" style="transform-origin:center;transform:scaleX(-1)"/></svg></span></button>
+ <button class="carousel-control-next" type="button" data-bs-target="#c-{{ uid }}" data-bs-slide="next" aria-label="Suivante"><span class="ig-arrow"><svg class="i"><use href="#i-chev"/></svg></span></button>
+ <span class="ig-counter" data-counter>1/{{ imgs|length }}</span>
+ <div class="ig-dots">{% for u in imgs %}<button type="button" data-bs-target="#c-{{ uid }}" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active" aria-current="true"{% endif %} aria-label="Image {{ forloop.counter }}"></button>{% endfor %}</div>
+</div>{% endif %}
+</div>

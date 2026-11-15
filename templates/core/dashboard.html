@@ -1,0 +1,48 @@
+{% extends "base.html" %}{% load ui %}{% block title %}Mon espace{% endblock %}
+{% block hero %}<section class="hero sm"><div class="container">
+ <div class="hero-user">{% avatar user "lg" "av-ring" %}<div><p class="small-hi">Mon espace</p><h1>Bonjour {{ user.first_name }}</h1></div></div>
+ <p class="hero-sub"><span class="pill-status"><svg class="i"><use href="#i-check"/></svg>{{ user.get_account_status_display }}</span>{% if user.matricule %}<span class="pill-status ghost">{{ user.matricule }}</span>{% endif %}</p>
+</div></section>{% endblock %}
+{% block quick %}<div class="container quick sm"><div class="quick-stats">
+ <a href="{% url 'payments:dues' %}"><b>{{ dues|length }}</b><span>à régler</span></a>
+ <a href="{% url 'notifications:list' %}"><b>{{ unread_notifications }}</b><span>non lues</span></a>
+ <a href="{% url 'events_member:list' %}"><b>{{ reservations|length }}</b><span>réservations</span></a>
+</div></div>{% endblock %}
+{% block content %}
+<div class="sec-title"><h2>Mon menu</h2><span class="muted small">Tout votre espace en un coup d'œil</span></div>
+<div class="menu-grid mb-4">
+ <a class="mtile c1" href="{% url 'memberships:apply' %}"><span class="mi"><svg class="i"><use href="#i-usercheck"/></svg></span><b>Mon adhésion</b><small>Statut et historique</small></a>
+ <a class="mtile c2" href="{% url 'payments:dues' %}"><span class="mi"><svg class="i"><use href="#i-wallet"/></svg></span><b>Cotisations</b><small>{% if dues %}{{ dues|length }} à régler{% else %}À jour{% endif %}</small>{% if dues %}<em class="mbadge">{{ dues|length }}</em>{% endif %}</a>
+ <a class="mtile c3" href="{% url 'payments:list' %}"><span class="mi"><svg class="i"><use href="#i-card"/></svg></span><b>Paiements</b><small>Historique complet</small></a>
+ <a class="mtile c4" href="{% url 'certificates:receipt_list' %}"><span class="mi"><svg class="i"><use href="#i-receipt"/></svg></span><b>Reçus</b><small>Télécharger en PDF</small></a>
+ <a class="mtile c5" href="{% url 'certificates:quitus_list' %}"><span class="mi"><svg class="i"><use href="#i-shield"/></svg></span><b>Quitus</b><small>Attestations</small></a>
+ <a class="mtile c6" href="{% url 'certificates:card' %}"><span class="mi"><svg class="i"><use href="#i-idcard"/></svg></span><b>Carte de membre</b><small>Votre carte (PDF)</small></a>
+ <a class="mtile c7" href="{% url 'events_member:list' %}"><span class="mi"><svg class="i"><use href="#i-ticket"/></svg></span><b>Réservations</b><small>Billets et événements</small></a>
+ <a class="mtile c8" href="{% url 'finance_member:list' %}"><span class="mi"><svg class="i"><use href="#i-chart"/></svg></span><b>Finances</b><small>Rapports publiés</small></a>
+ <a class="mtile c9" href="{% url 'support:list' %}"><span class="mi"><svg class="i"><use href="#i-lifebuoy"/></svg></span><b>Réclamations</b><small>Écrire au bureau</small></a>
+ <a class="mtile c10" href="{% url 'notifications:list' %}"><span class="mi"><svg class="i"><use href="#i-bell"/></svg></span><b>Notifications</b><small>{% if unread_notifications %}{{ unread_notifications }} non lue{{ unread_notifications|pluralize }}{% else %}Rien de nouveau{% endif %}</small>{% if unread_notifications %}<em class="mbadge">{{ unread_notifications }}</em>{% endif %}</a>
+ <a class="mtile c11" href="{% url 'accounts:profile' %}"><span class="mi"><svg class="i"><use href="#i-user"/></svg></span><b>Mon profil</b><small>Infos et mot de passe</small></a>
+ <a class="mtile c12" href="{% url 'publications:list' %}"><span class="mi"><svg class="i"><use href="#i-compass"/></svg></span><b>Actualités</b><small>Annonces de l'association</small></a>
+</div>
+
+<div class="row g-3">
+ <div class="col-12"><div class="panel">
+  <h2>Mon adhésion</h2>
+  {% if membership %}<p>Demande {{ membership.year }} : <span class="badge-s">{{ membership.get_status_display }}</span>
+   {% if membership.refusal_reason %}<br><span class="text-danger">Motif : {{ membership.refusal_reason }}</span>{% endif %}
+   {% if membership.missing_documents %}<br>Remarque : {{ membership.missing_documents }}{% endif %}</p>
+  {% else %}<p>Vous n'avez pas encore d'adhésion enregistrée.</p>{% endif %}
+  <p class="mb-0">Statut du compte : <span class="badge-s">{{ user.get_account_status_display }}</span> <a class="ms-2" href="{% url 'memberships:apply' %}">Gérer mon adhésion</a></p>
+ </div></div>
+ <div class="col-md-6"><div class="panel h-100"><h2>Cotisations à régler</h2>
+  {% for d in dues %}<div class="item d-flex justify-content-between"><span>{{ d.contribution.name }} - {{ d.amount }} Ar<br><small class="muted">avant le {{ d.due_date|date:"d/m/Y" }}</small></span><a class="btn btn-sm btn-aesm align-self-center" href="{% url 'payments:pay_due' d.pk %}">Payer</a></div>{% empty %}<p class="muted">Rien à régler.</p>{% endfor %}</div></div>
+ <div class="col-md-6"><div class="panel h-100"><h2>Derniers paiements</h2>
+  {% for p in payments %}<div class="item"><a href="{% url 'payments:detail' p.reference %}">{{ p.reference }}</a> - {{ p.amount }} Ar <span class="badge-s">{{ p.get_status_display }}</span></div>{% empty %}<p class="muted">Aucun paiement.</p>{% endfor %}</div></div>
+ <div class="col-md-6"><div class="panel h-100"><h2>Prochains événements réservés</h2>
+  {% for r in reservations %}<div class="item">{{ r.event.title }} - {{ r.event.starts_at|date:"d/m/Y H:i" }} <span class="badge-s">{{ r.get_status_display }}</span></div>{% empty %}<p class="muted">Aucune réservation.</p>{% endfor %}</div></div>
+ <div class="col-md-6"><div class="panel h-100"><h2>Dernières annonces</h2>
+  {% for p in publications %}<div class="item"><a href="{% url 'publications:detail' p.slug %}">{{ p.title }}</a></div>{% endfor %}
+  <h2 class="mt-3">Notifications non lues</h2>
+  {% for n in notifications %}<div class="item"><a href="{% url 'notifications:open' n.pk %}">{{ n.title }}</a></div>{% empty %}<p class="muted">Aucune.</p>{% endfor %}</div></div>
+</div>
+{% endblock %}

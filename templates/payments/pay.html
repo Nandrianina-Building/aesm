@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Paiement{% endblock %}
+{% block content %}{% include "partials/demo_banner.html" %}<div class="row justify-content-center"><div class="col-lg-6"><div class="panel"><h1>Régler : {% if due %}{{ due.contribution.name }}{% else %}{{ reservation.event.title }}{% endif %}</h1>
+<p class="fs-4">Montant : <strong>{{ amount }} Ar</strong> <small class="muted">(fixé par le serveur)</small></p>
+{% if simulation %}<div class="alert alert-warning">Paiement <strong>simulé</strong> : vous serez redirigé vers une fausse page de paiement où vous pourrez choisir le résultat. Aucun argent réel n'est utilisé.</div>
+{% else %}<div class="alert alert-info">Vous serez redirigé vers la page de paiement sécurisée (MVola / Orange Money).</div>{% endif %}
+<form method="post">{% csrf_token %}{% include "partials/form.html" %}<button class="btn btn-aesm">Continuer vers le paiement</button> <a href="{% url back %}">Annuler</a></form></div></div></div>{% endblock %}

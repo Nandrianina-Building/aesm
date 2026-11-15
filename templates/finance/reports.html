@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block title %}Rapports financiers{% endblock %}
+{% block content %}<div class="panel"><h1>Rapports financiers publiés</h1>{% for r in reports %}<div class="item"><a href="{% url 'finance_member:detail' r.pk %}"><strong>{{ r.title }}</strong></a> v{{ r.version }} - {{ r.period_start|date:"d/m/Y" }} au {{ r.period_end|date:"d/m/Y" }}</div>{% empty %}<p class="muted">Aucun rapport publié.</p>{% endfor %}</div>{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}{% load static ui %}{% block title %}{{ pub.title }}{% endblock %}{% block meta_description %}{{ pub.summary }}{% endblock %}{% block og_image_tag %}{% if pub.cover_url %}<meta property="og:image" content="{{ SITE_URL }}{{ pub.cover_url }}">{% endif %}{% endblock %}
+{% block content %}
+<a class="back-link" href="{% url 'publications:list' %}"><svg class="i" style="transform:scaleX(-1)"><use href="#i-chev"/></svg>Retour aux actualités</a>
+<article class="igpost ig-detail">
+ {% include "partials/ig_media.html" with uid="d" imgs=pub.all_images alt=pub.title ratio="sq" %}
+ <div class="ig-side-col">
+  <header class="ig-head">
+   <span class="ig-av"><span><img src="{% static 'img/logo.png' %}" alt=""></span></span>
+   <div class="ig-who"><b>{{ SITE_NAME }}</b><small>{{ pub.get_kind_display }}{% if pub.category %} · {{ pub.category.name }}{% endif %}</small></div>
+   <div class="ig-tags">{% if pub.pinned %}<span class="ig-tag"><svg class="i"><use href="#i-pinned"/></svg></span>{% endif %}{% if pub.visibility == 'members' %}<span class="ig-tag"><svg class="i"><use href="#i-lock"/></svg></span>{% endif %}</div>
+  </header>
+  <div class="ig-scroll">
+   <h1 class="ig-h1">{{ pub.title }}</h1>
+   <div class="ig-text">{{ pub.body|linebreaks }}</div>
+   <time class="ig-time">{{ pub.publish_at|date:"d F Y" }}</time>
+   <hr>
+   <div id="commentaires"></div>
+   {% if pub.comments_enabled %}
+   {% for c in comments %}<div class="ig-comment">
+    {% avatar c.user "xs" %}
+    <div class="cm-body"><p class="mb-0"><b>{{ c.user.short_name }}</b> {{ c.body }}</p>
+     <small class="muted">{{ c.created_at|timesince }}{% if c.edited %} · modifié{% endif %}{% if c.is_hidden %} · masqué{% endif %}</small>
+     {% if user.is_authenticated %}<div class="cm-actions">
+      {% if c.user_id == user.pk %}<a href="{% url 'publications:comment_edit' c.pk %}">Modifier</a>{% endif %}
+      {% if c.user_id == user.pk or can_moderate %}<form method="post" action="{% url 'publications:comment_delete' c.pk %}" data-confirm="Supprimer ce commentaire ?">{% csrf_token %}<button class="btn btn-link p-0">Supprimer</button></form>{% endif %}
+      {% if c.user_id != user.pk and user.is_active_member %}<form method="post" action="{% url 'publications:comment_report' c.pk %}">{% csrf_token %}<button class="btn btn-link p-0">Signaler</button></form>{% endif %}</div>{% endif %}
+    </div></div>
+   {% empty %}<p class="muted small mb-0">Aucun commentaire. Soyez le premier !</p>{% endfor %}
+   {% endif %}
+  </div>
+  <div class="ig-foot">
+   <div class="ig-actions">
+    {% if user.is_active_member %}<form method="post" action="{% url 'publications:like' pub.slug %}">{% csrf_token %}<button class="ig-btn {% if liked %}on{% endif %}" aria-label="{% if liked %}Je n'aime plus{% else %}J'aime{% endif %}"><svg class="i"><use href="#i-heart"/></svg></button></form>
+    {% else %}<span class="ig-btn"><svg class="i"><use href="#i-heart"/></svg></span>{% endif %}
+    <span class="ig-btn"><svg class="i"><use href="#i-comment"/></svg></span>
+    <button type="button" class="ig-btn" data-share data-title="{{ pub.title }}" data-url="{{ request.path }}" aria-label="Partager"><svg class="i"><use href="#i-share"/></svg></button>
+   </div>
+   <div class="ig-likes">{{ likes_count }} j'aime · {{ comments_total }} commentaire{{ comments_total|pluralize }}</div>
+   {% if pub.comments_enabled %}{% if user.is_active_member %}
+   <form method="post" action="{% url 'publications:comment_add' pub.slug %}" class="ig-compose">{% csrf_token %}
+    {% avatar user "xs" %}<textarea name="body" rows="1" maxlength="1000" required placeholder="Ajouter un commentaire…" aria-label="Commentaire"></textarea><button class="btn btn-link">Publier</button></form>
+   {% else %}<p class="muted small mb-0">Seuls les membres actifs peuvent commenter.</p>{% endif %}{% endif %}
+  </div>
+ </div>
+</article>
+{% endblock %}

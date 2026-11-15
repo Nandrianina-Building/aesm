@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Mes réservations{% endblock %}
+{% block content %}<div class="panel"><h1>Mes réservations</h1>{% for r in reservations %}<div class="item res-item">
+<div class="res-date"><b>{{ r.event.starts_at|date:"d" }}</b><small>{{ r.event.starts_at|date:"M" }}</small></div>
+<div class="res-main"><strong>{{ r.event.title }}</strong><br><small class="muted">{{ r.event.starts_at|date:"H:i" }} · {{ r.event.location }}</small><div class="mt-1"><span class="badge-s">{{ r.get_status_display }}</span></div>
+<div class="mt-2 d-flex gap-2 flex-wrap">
+{% if r.status == 'pending' %}<a class="btn btn-sm btn-aesm" href="{% url 'payments:pay_reservation' r.pk %}">Payer</a>{% endif %}
+{% if r.status == 'confirmed' %}<a class="btn btn-sm btn-aesm" href="{% url 'events_member:ticket' r.pk %}">Billet PDF</a>{% endif %}
+{% if r.status == 'pending' or r.status == 'confirmed' %}<form method="post" action="{% url 'events_member:cancel' r.pk %}" data-confirm="Annuler cette réservation ?">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">Annuler</button></form>{% endif %}</div></div></div>
+{% empty %}<p class="muted">Aucune réservation.</p>{% endfor %}</div>{% endblock %}

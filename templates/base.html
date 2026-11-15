@@ -1,0 +1,125 @@
+{% load static ui %}<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#9a77ea">
+<title>{% block title %}{{ SITE_NAME }}{% endblock %} | {{ SITE_NAME }}</title>
+<meta name="description" content="{% block meta_description %}{{ SITE_FULL_NAME }} : adhésion en ligne, cotisations par Mobile Money, actualités, événements et documents.{% endblock %}">
+<meta name="robots" content="{% block robots %}{% if user.is_authenticated %}noindex, nofollow{% else %}index, follow{% endif %}{% endblock %}">
+<link rel="canonical" href="{{ CANONICAL_URL }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ SITE_FULL_NAME }}">
+<meta property="og:title" content="{{ SITE_FULL_NAME }}">
+<meta property="og:url" content="{{ CANONICAL_URL }}">
+<meta property="og:locale" content="fr_FR">
+{% block og_image_tag %}<meta property="og:image" content="{{ SITE_URL }}{% static 'img/logo.png' %}">{% endblock %}
+<link rel="icon" href="{% static 'img/logo.png' %}">
+<link rel="preload" href="{% static 'vendor/fonts/montserrat-latin-600-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{% static 'vendor/fonts/montserrat-latin-800-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+<link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/fonts.css' %}?v={{ ASSET_V }}" rel="stylesheet">
+<link href="{% static 'css/style.css' %}?v={{ ASSET_V }}" rel="stylesheet">
+<script src="{% static 'js/skeleton.js' %}?v={{ ASSET_V }}"></script>
+</head>
+<body>
+{% include "partials/icons.html" %}
+<div class="masthead">
+ <header class="topbar">
+  <div class="topbar-in">
+   <a class="brand-link" href="{% url 'core:home' %}"><img src="{% static 'img/logo.png' %}" alt="{{ SITE_NAME }}"></a>
+   <nav class="dnav d-none d-lg-flex" aria-label="Navigation principale">
+    <a href="{% url 'core:home' %}" data-nav="exact">Accueil</a>
+    <a href="{% url 'core:about' %}" data-nav>À propos</a>
+    <a href="{% url 'publications:list' %}" data-nav>Actualités</a>
+    <a href="{% url 'events:list' %}" data-nav>Événements</a>
+    <a href="{% url 'documents:list' %}" data-nav>Documents</a>
+    <a href="{% url 'core:bureau' %}" data-nav>Bureau</a>
+    <a href="{% url 'core:contact' %}" data-nav>Contact</a>
+   </nav>
+   <div class="tb-actions">
+   {% if user.is_authenticated %}
+    {% if can_access_gestion %}<a class="pill-btn pill-ghost d-none d-lg-inline-flex" href="{% url 'gestion:home' %}" data-nav><svg class="i"><use href="#i-grid"/></svg>Gestion</a>{% endif %}
+    <a class="icon-btn" href="{% url 'notifications:list' %}" aria-label="Notifications"><svg class="i"><use href="#i-bell"/></svg>{% if unread_notifications %}<span class="dot">{{ unread_notifications }}</span>{% endif %}</a>
+    {% block header_cta_user %}<a class="pill-btn d-none d-lg-inline-flex" href="{% url 'dashboard:home' %}" data-nav>{% avatar user "xs" "av-in" %}Mon espace</a>{% endblock %}
+    <form method="post" action="{% url 'accounts:logout' %}" class="d-none d-lg-block">{% csrf_token %}<button class="icon-btn" aria-label="Déconnexion" title="Déconnexion"><svg class="i"><use href="#i-logout"/></svg></button></form>
+   {% else %}
+    <a class="pill-btn pill-ghost d-none d-sm-inline-flex" href="{% url 'accounts:login' %}">Connexion</a>
+    {% block header_cta %}<a class="pill-btn" href="{% url 'accounts:register' %}">Adhérer</a>{% endblock %}
+   {% endif %}
+    <button class="icon-btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#menu" aria-controls="menu" aria-label="Menu"><svg class="i"><use href="#i-menu"/></svg></button>
+   </div>
+  </div>
+ </header>
+ {% block hero %}{% endblock %}
+</div>
+
+<div class="offcanvas offcanvas-end drawer" tabindex="-1" id="menu" aria-label="Menu">
+ <div class="d-head">
+  {% if user.is_authenticated %}<a class="d-user" href="{% url 'accounts:profile' %}">{% avatar user "sm" "av-in" %}<span><b>{{ user.first_name }} {{ user.last_name }}</b><small>{{ user.matricule }}</small></span></a>{% else %}<a class="brand-link m-0" href="{% url 'core:home' %}"><img src="{% static 'img/logo.png' %}" alt="{{ SITE_NAME }}"></a>{% endif %}
+  <button type="button" class="icon-btn" data-bs-dismiss="offcanvas" aria-label="Fermer"><svg class="i"><use href="#i-x"/></svg></button>
+ </div>
+ <nav class="drawer-links flex-grow-1 overflow-auto" aria-label="Menu mobile">
+  <a href="{% url 'core:home' %}" data-nav="exact"><svg class="i"><use href="#i-home"/></svg>Accueil</a>
+  <a href="{% url 'core:about' %}" data-nav><svg class="i"><use href="#i-info"/></svg>À propos</a>
+  <a href="{% url 'publications:list' %}" data-nav><svg class="i"><use href="#i-compass"/></svg>Actualités</a>
+  <a href="{% url 'events:list' %}" data-nav><svg class="i"><use href="#i-calendar"/></svg>Événements</a>
+  <a href="{% url 'documents:list' %}" data-nav><svg class="i"><use href="#i-file"/></svg>Documents</a>
+  <a href="{% url 'core:bureau' %}" data-nav><svg class="i"><use href="#i-users"/></svg>Bureau</a>
+  <a href="{% url 'core:contact' %}" data-nav><svg class="i"><use href="#i-mail"/></svg>Contact</a>
+  {% if user.is_authenticated %}
+   {% if can_access_gestion %}<a href="{% url 'gestion:home' %}" data-nav><svg class="i"><use href="#i-grid"/></svg>Gestion</a>{% endif %}
+   <a href="{% url 'notifications:list' %}" data-nav><svg class="i"><use href="#i-bell"/></svg>Notifications{% if unread_notifications %} <span class="badge bg-danger rounded-pill">{{ unread_notifications }}</span>{% endif %}</a>
+   <a href="{% url 'dashboard:home' %}" data-nav="exact"><svg class="i"><use href="#i-user"/></svg>Mon espace</a>
+   <div class="drawer-title">Mon espace</div>
+   <a href="{% url 'memberships:apply' %}" data-nav><svg class="i"><use href="#i-usercheck"/></svg>Mon adhésion</a>
+   <a href="{% url 'payments:dues' %}" data-nav><svg class="i"><use href="#i-wallet"/></svg>Cotisations</a>
+   <a href="{% url 'payments:list' %}" data-nav><svg class="i"><use href="#i-card"/></svg>Paiements</a>
+   <a href="{% url 'certificates:receipt_list' %}" data-nav><svg class="i"><use href="#i-receipt"/></svg>Reçus</a>
+   <a href="{% url 'certificates:quitus_list' %}" data-nav><svg class="i"><use href="#i-shield"/></svg>Quitus</a>
+   <a href="{% url 'certificates:card' %}" data-nav><svg class="i"><use href="#i-idcard"/></svg>Ma carte de membre</a>
+   <a href="{% url 'events_member:list' %}" data-nav><svg class="i"><use href="#i-ticket"/></svg>Réservations</a>
+   <a href="{% url 'finance_member:list' %}" data-nav><svg class="i"><use href="#i-chart"/></svg>Rapports financiers</a>
+   <a href="{% url 'support:list' %}" data-nav><svg class="i"><use href="#i-lifebuoy"/></svg>Réclamations</a>
+   <a href="{% url 'accounts:profile' %}" data-nav><svg class="i"><use href="#i-user"/></svg>Mon profil</a>
+  {% else %}
+   <a href="{% url 'accounts:login' %}"><svg class="i"><use href="#i-login"/></svg>Connexion</a>
+  {% endif %}
+ </nav>
+ <div class="drawer-foot">
+ {% if user.is_authenticated %}
+  <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="btn btn-outline-secondary w-100"><svg class="i"><use href="#i-logout"/></svg> Déconnexion</button></form>
+ {% else %}
+  <a class="btn btn-aesm w-100" href="{% url 'accounts:register' %}">Adhérer à l'association</a>
+ {% endif %}
+ </div>
+</div>
+
+{% include "partials/messages.html" %}
+{% block quick %}{% endblock %}
+{% if user.is_authenticated and "/espace/" in request.path and request.path != "/espace/" or user.is_authenticated and "/compte/profil" in request.path %}{% include "partials/space_menu.html" %}{% endif %}
+<main class="page container py-4">{% block content %}{% endblock %}</main>
+<footer>
+ <div class="container row mx-auto">
+  <div class="col-md-6 mb-2 mb-md-0"><strong class="brand">{{ SITE_FULL_NAME }}</strong><br>{{ CONTACT_ADDRESS }}</div>
+  <div class="col-md-6 text-md-end">{{ CONTACT_EMAIL }}<br>{{ CONTACT_PHONE }}{% if FACEBOOK_URL %}<br><a href="{{ FACEBOOK_URL }}" rel="noopener">Facebook</a>{% endif %}</div>
+ </div>
+ <div class="container foot-links"><a href="{% url 'core:terms' %}">Conditions d'utilisation</a><a href="{% url 'core:privacy' %}">Confidentialité et RGPD</a>{% if ANALYTICS_ID %}<button type="button" class="linklike" data-cookie-settings>Gérer les cookies</button>{% endif %}</div>
+</footer>
+
+<nav class="tabbar d-lg-none" aria-label="Navigation rapide">
+ <a href="{% url 'core:home' %}" data-nav="exact"><svg class="i"><use href="#i-home"/></svg>Accueil</a>
+ <a href="{% url 'publications:list' %}" data-nav><svg class="i"><use href="#i-compass"/></svg>Actualités</a>
+ <a href="{% url 'events:list' %}" data-nav><svg class="i"><use href="#i-calendar"/></svg>Événements</a>
+ {% if user.is_authenticated %}
+ <a href="{% url 'dashboard:home' %}" data-nav><span class="tb-av">{% if user.photo %}{% avatar user "xs" %}{% else %}<svg class="i"><use href="#i-user"/></svg>{% endif %}</span>Mon espace{% if unread_notifications %}<span class="dot">{{ unread_notifications }}</span>{% endif %}</a>
+ {% else %}
+ <a href="{% url 'accounts:login' %}" data-nav><svg class="i"><use href="#i-login"/></svg>Connexion</a>
+ {% endif %}
+</nav>
+{% include "partials/cookie_banner.html" %}
+<div id="page-skeleton" aria-hidden="true"></div>
+<script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}" defer></script>
+<script src="{% static 'js/app.js' %}?v={{ ASSET_V }}" defer></script>
+{% if ANALYTICS_ID %}<script src="{% static 'js/consent.js' %}?v={{ ASSET_V }}" data-ga="{{ ANALYTICS_ID }}" defer></script>{% endif %}
+</body></html>

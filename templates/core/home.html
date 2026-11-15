@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% block title %}Accueil{% endblock %}{% block meta_description %}Adhérez à l'AESM, réglez votre cotisation par Mobile Money, suivez les actualités, événements et documents de l'association des étudiants en sociologie de Madagascar.{% endblock %}
+{% block header_cta %}{% endblock %}{% block header_cta_user %}{% endblock %}
+{% block hero %}
+<section class="hero"><div class="container">
+ <p class="small-hi">{{ SITE_FULL_NAME }}</p>
+ <h1>Sociologie à Madagascar : une association, une plateforme.</h1>
+ <p>Adhérez, réglez votre cotisation par Mobile Money, retrouvez vos cours et suivez la vie de l'{{ SITE_NAME }} sans faire la queue.</p>
+ {% if user.is_authenticated %}<a class="btn btn-red btn-lg" href="{% url 'dashboard:home' %}">Accéder à mon espace</a>{% else %}<a class="btn btn-red btn-lg" href="{% url 'accounts:register' %}">Créer mon compte</a>{% endif %}
+</div></section>
+{% endblock %}
+{% block quick %}<div class="container quick"><div class="quick-card">
+ <a href="{% url 'publications:list' %}"><span class="ico"><svg class="i"><use href="#i-compass"/></svg></span>Actualités</a>
+ <a href="{% url 'events:list' %}"><span class="ico"><svg class="i"><use href="#i-calendar"/></svg></span>Événements</a>
+ <a href="{% url 'documents:list' %}"><span class="ico"><svg class="i"><use href="#i-file"/></svg></span>Documents</a>
+ <a href="{% url 'core:bureau' %}"><span class="ico"><svg class="i"><use href="#i-users"/></svg></span>Bureau</a>
+</div></div>{% endblock %}
+{% block content %}
+<div class="row g-4">
+ <div class="col-lg-7"><div class="panel"><h2>Actualités récentes</h2>
+  {% for p in publications %}<div class="item news-row"><a class="thumb" href="{% url 'publications:detail' p.slug %}" aria-hidden="true" tabindex="-1">{% if p.cover_url %}<img src="{{ p.cover_url }}" alt="Image de l'actualité : {{ p.title }}" width="152" height="152" loading="lazy" decoding="async">{% else %}<span class="ph"><svg class="i"><use href="#i-image"/></svg></span>{% endif %}</a><div><a href="{% url 'publications:detail' p.slug %}"><strong>{{ p.title }}</strong></a><br><span class="muted">{{ p.summary }}</span></div></div>{% empty %}<p class="muted">Aucune actualité pour le moment.</p>{% endfor %}
+  <a href="{% url 'publications:list' %}">Toutes les actualités</a></div></div>
+ <div class="col-lg-5"><div class="panel"><h2>Événements à venir</h2>
+  {% for e in events %}<div class="item"><a href="{% url 'events:detail' e.pk %}"><strong>{{ e.title }}</strong></a><br><span class="muted">{{ e.starts_at|date:"d/m/Y H:i" }} - {{ e.location }}</span></div>{% empty %}<p class="muted">Aucun événement programmé.</p>{% endfor %}
+  <a href="{% url 'events:list' %}">Tous les événements</a></div></div>
+ <div class="col-12"><div class="panel"><h2>Documents publics récents</h2>
+  {% for d in documents %}<div class="item d-flex justify-content-between"><span>{{ d.title }} <span class="badge-s">{{ d.get_level_display }}</span></span><a href="{% url 'documents:download' d.pk %}">Télécharger</a></div>{% empty %}<p class="muted">Aucun document public.</p>{% endfor %}
+  <a href="{% url 'documents:list' %}">Bibliothèque documentaire</a></div></div>
+</div>
+{% endblock %}

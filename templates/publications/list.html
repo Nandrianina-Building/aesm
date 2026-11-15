@@ -1,0 +1,53 @@
+{% extends "base.html" %}{% load static ui %}{% block title %}Actualités{% endblock %}{% block meta_description %}Toutes les actualités, annonces et communiqués de l'AESM.{% endblock %}
+{% block content %}
+<div class="ig-layout">
+ <section class="ig-main">
+  <h1 class="visually-hidden">Actualités et annonces</h1>
+  <div class="stories" aria-label="Catégories">
+   <a class="story {% if not cat %}on{% endif %}" href="{% url 'publications:list' %}"><span class="ring"><span class="in"><img src="{% static 'img/logo.png' %}" alt=""></span></span><b>Toutes</b></a>
+   {% for c in categories %}<a class="story {% if cat == c.pk|stringformat:'s' %}on{% endif %}" href="?categorie={{ c.pk }}"><span class="ring"><span class="in">{% if c.thumb %}<img class="cover" src="{{ c.thumb }}" alt="" loading="lazy">{% else %}<span>{{ c.name|slice:":2" }}</span>{% endif %}</span></span><b>{{ c.name }}</b></a>{% endfor %}
+  </div>
+  <div class="ig-feed">
+  {% for p in page %}
+   <article class="igpost" id="post-{{ p.pk }}">
+    <header class="ig-head">
+     <a class="ig-av" href="{% url 'publications:detail' p.slug %}" tabindex="-1" aria-hidden="true"><span><img src="{% static 'img/logo.png' %}" alt=""></span></a>
+     <div class="ig-who"><b>{{ SITE_NAME }}</b><small>{{ p.get_kind_display }}{% if p.category %} · {{ p.category.name }}{% endif %}</small></div>
+     <div class="ig-tags">
+      {% if can_manage_pubs %}
+       <button type="button" class="ig-tag {% if p.pinned %}on{% else %}off{% endif %}" data-pub-toggle data-url="{% url 'publications:toggle_pin' p.slug %}" data-csrf="{{ csrf_token }}" data-kind="pin" title="{% if p.pinned %}Retirer l'épinglage{% else %}Épingler en haut du fil{% endif %}" aria-pressed="{% if p.pinned %}true{% else %}false{% endif %}" aria-label="Épingler"><svg class="i"><use href="#i-pinned"/></svg></button>
+       <button type="button" class="ig-tag {% if p.visibility == 'members' %}on{% else %}off{% endif %}" data-pub-toggle data-url="{% url 'publications:toggle_lock' p.slug %}" data-csrf="{{ csrf_token }}" data-kind="lock" title="{% if p.visibility == 'members' %}Rendre publique{% else %}Réserver aux membres{% endif %}" aria-pressed="{% if p.visibility == 'members' %}true{% else %}false{% endif %}" aria-label="Verrouiller"><svg class="i"><use href="#i-lock"/></svg></button>
+      {% else %}
+       {% if p.pinned %}<button type="button" class="ig-tag on" data-pub-info="Actualité épinglée par l'équipe de l'AESM : elle reste en haut du fil des actualités." aria-label="Épinglée"><svg class="i"><use href="#i-pinned"/></svg></button>{% endif %}
+       {% if p.visibility == 'members' %}<button type="button" class="ig-tag on" data-pub-info="Actualité réservée aux membres : vous la voyez parce que vous êtes connecté en tant que membre." aria-label="Réservée aux membres"><svg class="i"><use href="#i-lock"/></svg></button>{% endif %}
+      {% endif %}
+     </div>
+    </header>
+    <a class="ig-media-link" href="{% url 'publications:detail' p.slug %}">{% include "partials/ig_media.html" with uid=p.pk imgs=p.all_images alt=p.title ratio="portrait" %}</a>
+    <div class="ig-actions">
+     {% if user.is_active_member %}<form method="post" action="{% url 'publications:like' p.slug %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}#post-{{ p.pk }}"><button class="ig-btn {% if p.pk in liked_ids %}on{% endif %}" aria-label="{% if p.pk in liked_ids %}Je n'aime plus{% else %}J'aime{% endif %}" aria-pressed="{% if p.pk in liked_ids %}true{% else %}false{% endif %}"><svg class="i"><use href="#i-heart"/></svg></button></form>
+     {% else %}<a class="ig-btn" href="{% if user.is_authenticated %}{% url 'publications:detail' p.slug %}{% else %}{% url 'accounts:login' %}?next={{ request.get_full_path|urlencode }}{% endif %}" aria-label="J'aime"><svg class="i"><use href="#i-heart"/></svg></a>{% endif %}
+     <a class="ig-btn" href="{% url 'publications:detail' p.slug %}#commentaires" aria-label="Commentaires"><svg class="i"><use href="#i-comment"/></svg></a>
+     <button type="button" class="ig-btn" data-share data-title="{{ p.title }}" data-url="{% url 'publications:detail' p.slug %}" aria-label="Partager"><svg class="i"><use href="#i-share"/></svg></button>
+    </div>
+    <div class="ig-body">
+     <div class="ig-likes">{{ p.n_likes }} j'aime</div>
+     <p class="ig-cap"><b>{{ SITE_NAME }}</b> <a href="{% url 'publications:detail' p.slug %}" class="ig-title">{{ p.title }}</a> <span class="muted">{{ p.summary|truncatechars:140 }}</span></p>
+     {% if p.n_comments %}<a class="ig-more" href="{% url 'publications:detail' p.slug %}#commentaires">Voir les {{ p.n_comments }} commentaire{{ p.n_comments|pluralize }}</a>{% endif %}
+     <time class="ig-time" datetime="{{ p.publish_at|date:'c' }}">{{ p.publish_at|date:"d F Y" }}</time>
+    </div>
+   </article>
+  {% empty %}<div class="empty"><svg class="i"><use href="#i-image"/></svg><p>Aucune publication pour le moment.</p></div>{% endfor %}
+  </div>
+  {% include "partials/pagination.html" %}
+ </section>
+ <aside class="ig-side d-none d-lg-block">
+  <div class="panel">
+   <h2>Catégories</h2>
+   <div class="chips-wrap"><a class="chip {% if not cat %}on{% endif %}" href="{% url 'publications:list' %}">Toutes</a>{% for c in categories %}<a class="chip {% if cat == c.pk|stringformat:'s' %}on{% endif %}" href="?categorie={{ c.pk }}">{{ c.name }}</a>{% endfor %}</div>
+  </div>
+  <div class="panel mt-3"><h2>Rejoindre l'{{ SITE_NAME }}</h2><p class="muted small">Aimez et commentez les publications en devenant membre actif.</p>
+   {% if user.is_authenticated %}<a class="btn btn-aesm btn-sm" href="{% url 'events:list' %}">Voir les événements</a>{% else %}<a class="btn btn-aesm btn-sm" href="{% url 'accounts:register' %}">Créer mon compte</a>{% endif %}</div>
+ </aside>
+</div>
+{% endblock %}

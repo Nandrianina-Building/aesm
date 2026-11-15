@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block title %}Mes paiements{% endblock %}
+{% block content %}<div class="panel"><h1>Historique des transactions</h1><div class="table-responsive"><table class="table table-sm"><thead><tr><th>Référence</th><th>Objet</th><th>Montant</th><th>Moyen</th><th>Statut</th><th>Date</th></tr></thead><tbody>
+{% for p in page %}<tr><td><a href="{% url 'payments:detail' p.reference %}">{{ p.reference }}</a></td><td>{{ p.object_label }}</td><td>{{ p.amount }} Ar</td><td>{{ p.get_method_display }}</td><td>{{ p.get_status_display }}</td><td>{{ p.created_at|date:"d/m/Y H:i" }}</td></tr>
+{% empty %}<tr><td colspan="6" class="muted">Aucun paiement.</td></tr>{% endfor %}</tbody></table></div>{% include "partials/pagination.html" %}</div>{% endblock %}

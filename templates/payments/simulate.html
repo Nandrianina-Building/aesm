@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Paiement simulé{% endblock %}
+{% block content %}{% include "partials/demo_banner.html" %}<div class="row justify-content-center"><div class="col-lg-5"><div class="panel text-center">
+<span class="badge-s">SIMULATION</span><h1 class="mt-2">Page de paiement fictive</h1>
+<p class="muted">{{ p.object_label }}<br>Référence {{ p.reference }}</p><p class="display-6 my-3">{{ p.amount }} Ar</p>
+<p class="muted">Choisissez le résultat à simuler. Cette page sera remplacée par la page Tokipay en production.</p>
+<form method="post" class="d-grid gap-2">{% csrf_token %}
+<button name="outcome" value="success" class="btn btn-aesm btn-lg">Simuler un paiement réussi</button>
+<button name="outcome" value="fail" class="btn btn-red">Simuler un échec</button>
+<button name="outcome" value="cancel" class="btn btn-outline-secondary">Annuler</button></form></div></div></div>{% endblock %}

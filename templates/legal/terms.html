@@ -1,0 +1,34 @@
+{% extends "base.html" %}{% block title %}Conditions d'utilisation{% endblock %}
+{% block meta_description %}Conditions générales d'utilisation de la plateforme de l'AESM : compte, adhésion, cotisations, contenus et responsabilités.{% endblock %}
+{% block content %}<article class="panel legal">
+<h1>Conditions générales d'utilisation</h1>
+<p class="muted">Dernière mise à jour : {{ updated }}</p>
+
+<h2>1. Objet</h2>
+<p>Les présentes conditions encadrent l'utilisation de la plateforme en ligne de {{ SITE_FULL_NAME }} ({{ SITE_NAME }}) : adhésion, paiement des cotisations, actualités, événements, documents et services aux membres. En créant un compte ou en utilisant le site, vous acceptez ces conditions.</p>
+
+<h2>2. Compte et adhésion</h2>
+<p>La création d'un compte est gratuite et réservée aux étudiants concernés. Les informations fournies (nom, matricule, téléphone, e-mail) doivent être exactes. Un compte par personne. À la création du compte, vous devenez membre et accédez à votre espace. Vous devez confirmer votre adresse e-mail grâce au lien reçu.</p>
+<p>Vous êtes responsable de la confidentialité de votre mot de passe et de toute action réalisée depuis votre compte. Signalez immédiatement toute utilisation suspecte.</p>
+
+<h2>3. Cotisations et paiements</h2>
+<p>Les cotisations sont définies par le bureau et affichées dans votre espace avec leur montant et leur date limite. Le paiement s'effectue via Mobile Money par l'intermédiaire d'un prestataire de paiement. Un reçu est délivré après confirmation du paiement. Les remboursements sont traités au cas par cas par le bureau et peuvent entraîner la révocation du quitus correspondant.</p>
+
+<h2>4. Contenus et comportement</h2>
+<p>Vous vous engagez à rester respectueux dans les commentaires et réclamations. Sont interdits : propos haineux, diffamatoires ou illégaux, publicité non sollicitée, usurpation d'identité, tentative d'accès non autorisé ou d'atteinte au fonctionnement du site. Les modérateurs peuvent masquer ou supprimer un contenu, et suspendre un compte en cas de manquement.</p>
+
+<h2>5. Propriété intellectuelle</h2>
+<p>Les textes, logos, images et documents publiés par l'association sont protégés. Les documents pédagogiques sont destinés à un usage personnel et ne peuvent être revendus. Vous conservez vos droits sur les contenus que vous publiez et accordez à l'association le droit de les afficher sur la plateforme.</p>
+
+<h2>6. Disponibilité et responsabilité</h2>
+<p>L'association s'efforce d'assurer un accès continu au site, sans pouvoir garantir l'absence d'interruption (maintenance, incident technique, réseau). Elle ne peut être tenue responsable des dommages indirects liés à l'utilisation du site ni des contenus publiés par les utilisateurs.</p>
+
+<h2>7. Données personnelles</h2>
+<p>Le traitement de vos données est décrit dans la <a href="{% url 'core:privacy' %}">politique de confidentialité</a>.</p>
+
+<h2>8. Fin d'utilisation</h2>
+<p>Vous pouvez demander la fermeture de votre compte à tout moment en écrivant à <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>. L'association peut suspendre ou fermer un compte en cas de non-respect des présentes conditions.</p>
+
+<h2>9. Modification et droit applicable</h2>
+<p>Ces conditions peuvent être modifiées ; la version en vigueur est celle publiée sur cette page. Elles sont soumises au droit malgache. En cas de litige, une solution amiable est recherchée avant toute action devant les tribunaux compétents.</p>
+</article>{% endblock %}

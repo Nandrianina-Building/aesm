@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}{{ p.reference }}{% endblock %}
+{% block content %}<div class="panel"><h1>Paiement {{ p.reference }}</h1>
+<dl class="row"><dt class="col-sm-4">Objet</dt><dd class="col-sm-8">{{ p.object_label }}</dd><dt class="col-sm-4">Montant</dt><dd class="col-sm-8">{{ p.amount }} {{ p.currency }}</dd>
+<dt class="col-sm-4">Moyen</dt><dd class="col-sm-8">{{ p.get_method_display }}</dd><dt class="col-sm-4">Référence transaction</dt><dd class="col-sm-8">{{ p.external_reference|default:"-" }}</dd>
+<dt class="col-sm-4">Statut</dt><dd class="col-sm-8"><span class="badge-s">{{ p.get_status_display }}</span></dd>
+{% if p.failure_reason %}<dt class="col-sm-4">Motif</dt><dd class="col-sm-8">{{ p.failure_reason }}</dd>{% endif %}
+<dt class="col-sm-4">Créé le</dt><dd class="col-sm-8">{{ p.created_at|date:"d/m/Y H:i" }}</dd>
+{% if p.confirmed_at %}<dt class="col-sm-4">Confirmé le</dt><dd class="col-sm-8">{{ p.confirmed_at|date:"d/m/Y H:i" }}</dd>{% endif %}</dl>
+{% if can_resume %}<a class="btn btn-aesm" href="{% url 'payments:simulate' p.reference %}">Continuer le paiement simulé</a>{% elif p.status == 'pending' or p.status == 'verifying' %}<div class="alert alert-info">En attente de confirmation.</div>{% endif %}
+{% if p.receipt and not p.receipt.is_void %}<a class="btn btn-aesm" href="{% url 'certificates:receipt_pdf' p.receipt.number %}">Télécharger le reçu</a>{% endif %}
+<a class="btn btn-link" href="{% url 'payments:list' %}">Retour</a></div>{% endblock %}

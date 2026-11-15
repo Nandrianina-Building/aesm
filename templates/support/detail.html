@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Réclamation #{{ t.pk }}{% endblock %}
+{% block content %}<div class="panel"><h1>#{{ t.pk }} {{ t.subject }}</h1><p><span class="badge-s">{{ t.get_status_display }}</span> {{ t.get_reason_display }}</p><p>{{ t.description|linebreaks }}</p>
+{% if t.attachment %}<a href="{% url 'support:attachment' t.pk %}">Pièce jointe</a>{% endif %}<hr>
+{% for m in t.messages.all %}<div class="item"><strong>{% if m.from_staff %}AESM{% else %}Moi{% endif %}</strong> <small class="muted">{{ m.created_at|date:"d/m/Y H:i" }}</small><p class="mb-0">{{ m.body }}</p></div>{% endfor %}
+{% if t.is_open %}<form method="post" class="mt-3">{% csrf_token %}{% include "partials/form.html" %}<button class="btn btn-aesm">Répondre</button></form>{% endif %}</div>{% endblock %}

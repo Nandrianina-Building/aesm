@@ -1,0 +1,38 @@
+{% load static %}<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#9a77ea">
+<title>{% block title %}{{ SITE_NAME }}{% endblock %} | {{ SITE_NAME }}</title>
+<meta name="description" content="{% block meta_description %}{{ SITE_FULL_NAME }} : adhésion en ligne, cotisations par Mobile Money, actualités, événements et documents.{% endblock %}">
+<meta name="robots" content="{% block robots %}noindex, follow{% endblock %}">
+<link rel="canonical" href="{{ CANONICAL_URL }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ SITE_FULL_NAME }}">
+<meta property="og:title" content="{{ SITE_FULL_NAME }}">
+<meta property="og:url" content="{{ CANONICAL_URL }}">
+<meta property="og:locale" content="fr_FR">
+{% block og_image_tag %}<meta property="og:image" content="{% block og_image %}{% static 'img/logo.png' %}{% endblock %}">{% endblock %}
+<link rel="icon" href="{% static 'img/logo.png' %}">
+<link rel="preload" href="{% static 'vendor/fonts/montserrat-latin-600-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{% static 'vendor/fonts/montserrat-latin-800-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+<link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/fonts.css' %}?v={{ ASSET_V }}" rel="stylesheet">
+<link href="{% static 'css/style.css' %}?v={{ ASSET_V }}" rel="stylesheet">
+<script src="{% static 'js/skeleton.js' %}?v={{ ASSET_V }}"></script>
+</head>
+<body class="auth">
+{% include "partials/icons.html" %}
+<a class="icon-btn auth-home" href="{% url 'core:home' %}" aria-label="Accueil"><svg class="i"><use href="#i-home"/></svg></a>
+{% include "partials/messages.html" %}
+<main class="auth-wrap {% block wrap_class %}{% endblock %}">
+ <div class="auth-logo"><img src="{% static 'img/logo.png' %}" alt="{{ SITE_NAME }}"></div>
+ {% block content %}{% endblock %}
+</main>
+{% include "partials/cookie_banner.html" %}
+<script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}" defer></script>
+<script src="{% static 'js/app.js' %}?v={{ ASSET_V }}" defer></script>
+{% if ANALYTICS_ID %}<script src="{% static 'js/consent.js' %}?v={{ ASSET_V }}" data-ga="{{ ANALYTICS_ID }}" defer></script>{% endif %}
+<div id="page-skeleton" aria-hidden="true"></div>
+</body></html>

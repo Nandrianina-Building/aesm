@@ -1,0 +1,4 @@
+# crontab -e (utilisateur de l'application)
+*/10 * * * * cd /srv/aesm && /srv/aesm/.venv/bin/python manage.py expire_reservations
+15 0  * * * cd /srv/aesm && /srv/aesm/.venv/bin/python manage.py housekeeping
+30 2  * * * /srv/aesm/deploy/backup.sh

@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block title %}Mes reçus{% endblock %}
+{% block content %}<div class="panel"><h1>Mes reçus</h1>{% for r in receipts %}<div class="item d-flex justify-content-between"><span>{{ r.number }} - {{ r.payment.amount }} Ar - {{ r.issued_at|date:"d/m/Y" }}{% if r.is_void %} <span class="badge-s">Annulé</span>{% endif %}</span><a href="{% url 'certificates:receipt_pdf' r.number %}">PDF</a></div>{% empty %}<p class="muted">Aucun reçu.</p>{% endfor %}</div>{% endblock %}

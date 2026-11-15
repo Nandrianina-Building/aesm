@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}Page introuvable{% endblock %}{% block robots %}noindex, nofollow{% endblock %}
+{% block header_cta %}{% endblock %}
+{% block content %}<section class="err-page"><div class="err-code" aria-hidden="true">404</div><h1>Page introuvable</h1>
+<p class="muted">La page demandée n'existe pas, a été déplacée ou n'est plus accessible. Vérifiez l'adresse ou choisissez une destination ci-dessous.</p>
+<div class="d-flex flex-wrap justify-content-center gap-2"><a class="btn btn-aesm btn-lg" href="{% url 'core:home' %}">Retour à l'accueil</a>
+<a class="btn btn-outline-secondary btn-lg" href="{% url 'publications:list' %}">Actualités</a>
+<a class="btn btn-outline-secondary btn-lg" href="{% url 'events:list' %}">Événements</a>
+<a class="btn btn-outline-secondary btn-lg" href="{% url 'core:contact' %}">Nous contacter</a></div></section>{% endblock %}

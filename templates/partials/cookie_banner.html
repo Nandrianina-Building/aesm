@@ -1,0 +1,5 @@
+{% if ANALYTICS_ID %}<div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookies" hidden>
+ <div class="cb-text"><strong>Cookies de mesure d'audience</strong>
+  <p>Avec votre accord, nous utilisons Google Analytics pour comprendre comment le site est utilisé. Les cookies indispensables (connexion, sécurité) restent actifs. <a href="{% url 'core:privacy' %}#cookies">En savoir plus</a></p></div>
+ <div class="cb-actions"><button type="button" class="btn btn-outline-secondary btn-sm" data-consent="denied">Refuser</button><button type="button" class="btn btn-outline-secondary btn-sm" data-consent="granted">Accepter</button></div>
+</div>{% endif %}

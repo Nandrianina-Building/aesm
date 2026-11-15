@@ -1,0 +1,12 @@
+{% extends "gestion/base.html" %}{% block title %}Paiement - Gestion{% endblock %}{% block gcontent %}<div class="panel"><h1>Paiement {{ p.reference }}</h1>
+<dl class="row"><dt class="col-sm-3">Membre</dt><dd class="col-sm-9">{{ p.user.full_name }} ({{ p.user.matricule }}) - {{ p.user.phone }}</dd><dt class="col-sm-3">Objet</dt><dd class="col-sm-9">{{ p.object_label }}</dd>
+<dt class="col-sm-3">Montant attendu</dt><dd class="col-sm-9">{{ p.amount }} {{ p.currency }}</dd><dt class="col-sm-3">Moyen</dt><dd class="col-sm-9">{{ p.get_method_display }}{% if p.payer_phone %} - payeur {{ p.payer_phone }}{% endif %}</dd>
+<dt class="col-sm-3">Réf. transaction</dt><dd class="col-sm-9">{{ p.external_reference|default:"-" }}</dd><dt class="col-sm-3">Statut</dt><dd class="col-sm-9"><span class="badge-s">{{ p.get_status_display }}</span></dd>
+{% if p.failure_reason %}<dt class="col-sm-3">Motif</dt><dd class="col-sm-9">{{ p.failure_reason }}</dd>{% endif %}
+{% if p.proof %}<dt class="col-sm-3">Preuve</dt><dd class="col-sm-9"><a href="{% url 'payments:proof' p.reference %}">Télécharger</a></dd>{% endif %}</dl>
+{% if can_verify and p.status == 'pending' or can_verify and p.status == 'verifying' or can_verify and p.status == 'processing' %}
+<h2>Vérification</h2><p class="muted">Vérifiez la transaction chez le prestataire (ou dans le compte Mobile Money de l'AESM), puis saisissez le montant réellement reçu.</p>
+<form method="post" action="{% url 'gestion:payment_confirm' p.reference %}" class="mb-3">{% csrf_token %}{% include "partials/form.html" with form=verify_form %}<button class="btn btn-aesm">Confirmer le paiement</button></form>
+<form method="post" action="{% url 'gestion:payment_reject' p.reference %}">{% csrf_token %}{% include "partials/form.html" with form=reason_form %}<button class="btn btn-red">Rejeter</button></form>{% endif %}
+{% if can_refund and p.status == 'confirmed' %}<h2>Remboursement</h2><form method="post" action="{% url 'gestion:payment_refund' p.reference %}" data-confirm="Rembourser ce paiement ? Le quitus sera révoqué.">{% csrf_token %}{% include "partials/form.html" with form=reason_form %}<button class="btn btn-red">Rembourser</button></form>{% endif %}
+<a href="{% url 'gestion:payments' %}">Retour</a></div>{% endblock %}

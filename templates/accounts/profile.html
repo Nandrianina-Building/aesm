@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% load ui %}{% block title %}Mon profil{% endblock %}
+{% block content %}<div class="row justify-content-center"><div class="col-lg-7"><div class="panel"><div class="profile-head">
+<label class="avatar-edit" for="id_photo" title="Changer ma photo">{% avatar user "xl" "av-ring" %}<span class="cam"><svg class="i"><use href="#i-camera"/></svg></span></label>
+<div><h1 class="mb-1">{{ user.first_name }} {{ user.last_name }}</h1><p class="mb-1 muted">Matricule <strong>{{ user.matricule }}</strong></p>
+<span class="badge-s">{{ user.get_account_status_display }}</span>{% if user.email %} <span class="badge-s">E-mail {% if user.email_verified %}vérifié{% else %}non vérifié{% endif %}</span>{% endif %}</div></div>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}{% include "partials/form.html" %}<button class="btn btn-aesm">Enregistrer</button></form>
+{% if user.email and not user.email_verified %}<form method="post" action="{% url 'accounts:resend_verification' %}" class="mt-2">{% csrf_token %}<button class="btn btn-link p-0">Renvoyer le lien de vérification</button></form>{% endif %}
+<hr><a href="{% url 'accounts:password_change' %}">Changer mon mot de passe</a></div></div></div>{% endblock %}

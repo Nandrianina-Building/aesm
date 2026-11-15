@@ -1,0 +1,13 @@
+{% if welcome %}Bienvenue {{ user.first_name }} !
+
+Votre compte {{ SITE_NAME }} est créé et actif : vous êtes membre de l'association.
+{% else %}Bonjour {{ user.first_name }},
+{% endif %}
+Pour confirmer votre adresse e-mail, ouvrez ce lien :
+{{ verify_url }}
+
+Accéder à mon espace : {{ space_url }}
+
+Si vous n'êtes pas à l'origine de cette demande, ignorez simplement ce message.
+
+{{ SITE_FULL_NAME }}

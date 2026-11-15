@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% load ui %}{% block title %}Ma carte{% endblock %}
+{% block content %}<div class="panel" style="max-width:520px"><h1>Ma carte de membre</h1>
+<div class="profile-head">{% avatar user "xl" "av-ring" %}<p class="mb-0"><strong>{{ user.full_name }}</strong><br>Matricule : {{ user.matricule }}<br>N° membre : {{ user.profile.member_number|default:"-" }}<br>Carte : {{ card.number }} <span class="badge-s">{{ card.status_label }}</span></p></div>
+<a class="btn btn-aesm" href="{% url 'certificates:card_pdf' %}">Télécharger la carte (PDF)</a></div>{% endblock %}

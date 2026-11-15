@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Bureau{% endblock %}{% block meta_description %}Rencontrez les responsables du bureau de l'AESM : fonctions et mandats.{% endblock %}
+{% block content %}<h1>Le bureau</h1><div class="row g-3">
+{% for o in current %}<div class="col-sm-6 col-lg-4"><div class="panel h-100 officer">
+ <h2 class="mb-0">{{ o.first_name }} {{ o.last_name }}</h2><div class="role">{{ o.function }}</div><p class="mt-2 mb-2">{{ o.description }}</p><small class="muted">Mandat depuis {{ o.mandate_start|date:"d/m/Y" }}</small></div></div>{% empty %}<p class="muted">Aucun responsable renseigné.</p>{% endfor %}</div>
+{% if archived %}<h2 class="mt-4">Anciens mandats</h2><div class="panel">{% for o in archived %}<div class="item d-flex align-items-center gap-3"><span>{{ o.first_name }} {{ o.last_name }} - {{ o.function }} <small class="muted">({{ o.mandate_start|date:"Y" }}{% if o.mandate_end %}-{{ o.mandate_end|date:"Y" }}{% endif %})</small></span></div>{% endfor %}</div>{% endif %}{% endblock %}

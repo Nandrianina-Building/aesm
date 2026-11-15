@@ -1,0 +1,6 @@
+{% extends "gestion/base.html" %}{% load ui %}{% block title %}{{ title }} - Gestion{% endblock %}{% block gcontent %}<div class="panel form-panel">{% if subject %}<div class="profile-head">{% avatar subject "xl" "av-ring" %}<h1 class="mb-0">{{ title }}</h1></div>{% else %}<h1>{{ title }}</h1>{% endif %}
+<form method="post" {% if multipart %}enctype="multipart/form-data"{% endif %}>{% csrf_token %}{% include "partials/form.html" %}
+{% if cover or gallery_items %}<div class="media-manage"><h2>Images actuelles</h2><p class="muted small">Cochez « Retirer » pour supprimer une image de la galerie. L'image principale se remplace via le champ ci-dessus.</p>
+<div class="mm-grid">{% if cover %}<figure class="mm-item"><img src="{{ cover.url }}" alt="Image principale"><figcaption><span class="badge-s">Principale</span></figcaption></figure>{% endif %}
+{% for im in gallery_items %}<figure class="mm-item"><img src="{{ im.image.url }}" alt="Image {{ forloop.counter }}"><figcaption><label class="mm-rm"><input type="checkbox" name="remove_images" value="{{ im.pk }}"> Retirer</label></figcaption></figure>{% endfor %}</div></div>{% endif %}
+<div class="preview-grid" data-preview-target hidden></div><button class="btn btn-aesm">Enregistrer</button> <a href="{% url back %}">Annuler</a></form></div>{% endblock %}

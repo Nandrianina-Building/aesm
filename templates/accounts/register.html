@@ -1,0 +1,6 @@
+{% extends "base_auth.html" %}{% block title %}Inscription{% endblock %}{% block meta_description %}Créez votre compte AESM et devenez membre en quelques minutes.{% endblock %}
+{% block wrap_class %}wide{% endblock %}
+{% block content %}<div class="row justify-content-center"><div class="col-lg-7"><div class="panel"><h1>Créer mon compte</h1>
+<p class="muted">Votre compte n'est pas encore une adhésion : après création, vous soumettrez votre demande d'adhésion.</p>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}{% include "partials/form.html" %}<button class="btn btn-aesm">Créer mon compte</button></form>
+<p class="auth-links">Déjà un compte ? <a href="{% url 'accounts:login' %}">Se connecter</a></p></div></div></div>{% endblock %}
